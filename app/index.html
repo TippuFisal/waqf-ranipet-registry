@@ -1,0 +1,602 @@
+<title>Ranipet Waqf Registry</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ground:#F6F5F0;
+    --surface:#FFFFFF;
+    --surface-2:#F0EFE9;
+    --ink:#1D2A22;
+    --ink-soft:#46524A;
+    --muted:#6B756E;
+    --accent:#0F6B54;
+    --accent-ink:#0A4E3D;
+    --accent-soft:#E3F0EA;
+    --brass:#A9793A;
+    --brass-soft:#F4E9D6;
+    --border:#DEE3DC;
+    --border-strong:#C7CEC6;
+    --shadow: 0 1px 2px rgba(20,30,24,0.04), 0 6px 20px -8px rgba(20,30,24,0.10);
+    --focus: #1E7F63;
+    --warn: #9A5B12;
+    --warn-soft: #FBEEDC;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#10160F;
+      --surface:#181F17;
+      --surface-2:#1F2A1D;
+      --ink:#EAF1EA;
+      --ink-soft:#C4D0C6;
+      --muted:#93A29A;
+      --accent:#43C39A;
+      --accent-ink:#8FE6C4;
+      --accent-soft:#1B3A2E;
+      --brass:#E0B168;
+      --brass-soft:#3A2E17;
+      --border:#2A342A;
+      --border-strong:#3A473A;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 10px 30px -10px rgba(0,0,0,0.55);
+      --focus: #6BE0B8;
+      --warn: #E3B15C;
+      --warn-soft: #3A2E14;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#10160F;
+    --surface:#181F17;
+    --surface-2:#1F2A1D;
+    --ink:#EAF1EA;
+    --ink-soft:#C4D0C6;
+    --muted:#93A29A;
+    --accent:#43C39A;
+    --accent-ink:#8FE6C4;
+    --accent-soft:#1B3A2E;
+    --brass:#E0B168;
+    --brass-soft:#3A2E17;
+    --border:#2A342A;
+    --border-strong:#3A473A;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 10px 30px -10px rgba(0,0,0,0.55);
+    --focus: #6BE0B8;
+    --warn: #E3B15C;
+    --warn-soft: #3A2E14;
+  }
+
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--ground);
+    color:var(--ink);
+    font-family:"Public Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    line-height:1.45;
+    padding-inline: max(16px, env(safe-area-inset-left)) max(16px, env(safe-area-inset-right));
+  }
+  ::selection{ background: var(--accent-soft); color: var(--accent-ink); }
+  a{ color: var(--accent-ink); }
+  :focus-visible{ outline: 2.5px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
+  @media (prefers-reduced-motion: reduce){ *{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; } }
+
+  .wrap{ max-width: 900px; margin: 0 auto; }
+
+  /* ---------- Header ---------- */
+  header.top{
+    padding-block: 22px 14px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .eyebrow{
+    display:flex; align-items:center; gap:8px;
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:11.5px; letter-spacing:.09em; text-transform:uppercase;
+    color:var(--brass);
+  }
+  .eyebrow .dot{ width:5px; height:5px; border-radius:50%; background:var(--brass); }
+  h1{
+    font-family:"Newsreader", Georgia, serif;
+    font-optical-sizing:auto;
+    font-weight:600;
+    font-size: clamp(28px, 6vw, 40px);
+    line-height:1.08;
+    margin:0;
+    text-wrap:balance;
+    color:var(--ink);
+  }
+  .dek{
+    margin:0;
+    max-width:60ch;
+    color:var(--ink-soft);
+    font-size:15px;
+  }
+  .dek b{ color:var(--ink); font-weight:600; }
+
+  .stats{
+    display:flex; gap:10px;
+    overflow-x:auto;
+    padding-bottom:2px;
+    scrollbar-width:none;
+    scroll-snap-type: x proximity;
+  }
+  .stats::-webkit-scrollbar{ display:none; }
+  @media (max-width:600px){
+    .stats{ mask-image: linear-gradient(to right, black calc(100% - 28px), transparent); -webkit-mask-image: linear-gradient(to right, black calc(100% - 28px), transparent); }
+  }
+  .stat{
+    flex: 0 0 auto;
+    scroll-snap-align:start;
+    min-width:118px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:10px 14px;
+    box-shadow: var(--shadow);
+  }
+  .stat .n{
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+    font-size:20px; font-weight:600; color:var(--accent-ink);
+    display:block;
+  }
+  .stat .l{ font-size:11.5px; color:var(--muted); letter-spacing:.03em; }
+
+  /* ---------- Filter bar ---------- */
+  .filterbar{
+    position:sticky; top:0; z-index:20;
+    background: color-mix(in srgb, var(--ground) 92%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding-block: 12px 10px;
+    border-bottom:1px solid var(--border);
+    display:flex; flex-direction:column; gap:10px;
+  }
+  .searchrow{ position:relative; }
+  .searchrow svg{
+    position:absolute; left:12px; top:50%; transform:translateY(-50%);
+    width:17px; height:17px; color:var(--muted); pointer-events:none;
+  }
+  #search{
+    width:100%;
+    font: inherit;
+    font-size:15.5px;
+    padding: 11px 40px 11px 38px;
+    border-radius:11px;
+    border:1.5px solid var(--border-strong);
+    background:var(--surface);
+    color:var(--ink);
+  }
+  #search::placeholder{ color:var(--muted); }
+  #search:focus{ border-color:var(--accent); }
+  .clearbtn{
+    position:absolute; right:6px; top:50%; transform:translateY(-50%);
+    border:none; background:transparent; color:var(--muted);
+    width:30px; height:30px; border-radius:8px; cursor:pointer;
+    display:none; align-items:center; justify-content:center;
+  }
+  .clearbtn:hover{ background:var(--surface-2); }
+
+  .controls{
+    display:flex; flex-wrap:wrap; gap:8px;
+    align-items:center;
+  }
+  .ctrl{
+    font: inherit;
+    font-size:13.5px;
+    font-weight:500;
+    padding:8px 12px;
+    border-radius:9px;
+    border:1.5px solid var(--border-strong);
+    background:var(--surface);
+    color:var(--ink-soft);
+    cursor:pointer;
+  }
+  select.ctrl{ padding-right:8px; }
+  .ctrl:hover{ border-color:var(--accent); color:var(--ink); }
+  .chipgroup{ display:flex; gap:6px; flex-wrap:wrap; }
+  .chip{
+    font: inherit; font-size:13px; font-weight:600;
+    padding:7px 12px; border-radius:999px;
+    border:1.5px solid var(--border-strong);
+    background:var(--surface); color:var(--ink-soft);
+    cursor:pointer;
+  }
+  .chip[aria-pressed="true"]{
+    background:var(--accent-soft); border-color:var(--accent); color:var(--accent-ink);
+  }
+  .resultline{
+    font-size:12.5px; color:var(--muted);
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+  }
+  #resetBtn{
+    background:none; border:none; color:var(--accent-ink); font:inherit;
+    font-size:12.5px; font-weight:600; cursor:pointer; padding:2px 0;
+    text-decoration:underline; text-underline-offset:2px;
+    display:none;
+  }
+
+  /* ---------- List ---------- */
+  #list{ padding-block: 16px 60px; display:flex; flex-direction:column; gap:10px; }
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    box-shadow: var(--shadow);
+    overflow:hidden;
+  }
+  .card > button.head{
+    all:unset; box-sizing:border-box;
+    display:flex; width:100%; cursor:pointer;
+    padding:14px 16px;
+    gap:12px;
+    align-items:flex-start;
+  }
+  .sno{
+    flex:0 0 auto;
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:12px; font-weight:600; color:var(--muted);
+    background:var(--surface-2);
+    border-radius:7px;
+    padding:3px 7px;
+    margin-top:3px;
+    font-variant-numeric: tabular-nums;
+  }
+  .headmain{ flex:1 1 auto; min-width:0; }
+  .name{
+    font-family:"Newsreader", Georgia, serif;
+    font-weight:600; font-size:17px; line-height:1.28;
+    color:var(--ink);
+    text-wrap:pretty;
+  }
+  .name mark{ background:var(--brass-soft); color:inherit; border-radius:3px; }
+  .meta{
+    margin-top:6px;
+    display:flex; flex-wrap:wrap; gap:6px 8px;
+    align-items:center;
+  }
+  .badge{
+    font-size:11.5px; font-weight:600; letter-spacing:.02em;
+    padding:2px 8px; border-radius:999px;
+    background:var(--surface-2); color:var(--ink-soft);
+    border:1px solid var(--border);
+  }
+  .badge.gs{ font-family:"IBM Plex Mono", ui-monospace, monospace; font-weight:500; }
+  .badge.denom{ background:var(--accent-soft); color:var(--accent-ink); border-color:transparent; }
+  .badge.flag{ background:var(--warn-soft); color:var(--warn); border-color:transparent; cursor:help; }
+  .villages{ font-size:12.5px; color:var(--muted); margin-top:4px; }
+  .foot-stats{
+    flex:0 1 auto; min-width:0; max-width:38%; text-align:right;
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+  .foot-stats .acres{ font-size:16px; font-weight:600; color:var(--accent-ink); display:block; }
+  .foot-stats .parcels{ font-size:11px; color:var(--muted); white-space:normal; }
+  .chev{
+    flex:0 0 auto; width:20px; height:20px; margin-top:2px;
+    color:var(--muted); transition:transform .18s ease;
+  }
+  .card[data-open="true"] .chev{ transform:rotate(180deg); }
+
+  .panel{ display:none; border-top:1px solid var(--border); }
+  .card[data-open="true"] .panel{ display:block; }
+  .parceltable{ padding: 4px 16px 14px; }
+  .prow{
+    display:grid;
+    grid-template-columns: 1.2fr 34px 1fr;
+    gap:8px 10px;
+    padding:8px 0;
+    border-bottom:1px dashed var(--border);
+    align-items:baseline;
+    font-size:13.5px;
+  }
+  .prow:last-child{ border-bottom:none; }
+  .prow .pv{ color:var(--ink-soft); min-width:0; overflow-wrap:break-word; }
+  .prow .pv .sv{ display:block; font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:11.5px; color:var(--muted); }
+  .prow .ptype{ font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:11px; color:var(--muted); text-align:center; }
+  .prow .pext{
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+    text-align:right; color:var(--ink); font-weight:500;
+    white-space:normal;
+  }
+  .prow.flagged .pv, .prow.flagged .pext{ text-decoration: underline dotted var(--warn); text-underline-offset:3px; cursor:help; }
+  .panel-note{
+    margin: 0 16px 14px; padding:9px 11px;
+    background:var(--warn-soft); color:var(--warn);
+    border-radius:9px; font-size:12px; line-height:1.4;
+  }
+
+  .empty{
+    text-align:center; padding: 50px 20px; color:var(--muted);
+  }
+  .empty .big{ font-family:"Newsreader", serif; font-size:20px; color:var(--ink); margin-bottom:6px; }
+
+  footer{
+    padding-block: 22px 40px;
+    border-top:1px solid var(--border);
+    color:var(--muted); font-size:12.5px; line-height:1.6;
+  }
+  footer b{ color:var(--ink-soft); }
+
+  @media (min-width:640px){
+    .prow{ grid-template-columns: 1fr 64px 220px; font-size:14px; }
+    .name{ font-size:18px; }
+  }
+
+  @media (max-width:480px){
+    .ctrl, .chip{ min-height:42px; }
+    select.ctrl{ flex:1 1 100%; }
+    .card > button.head{ padding:13px 12px; gap:10px; }
+    .foot-stats{ min-width:0; }
+    .foot-stats .acres{ font-size:15px; }
+  }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow"><span class="dot"></span> Tamil Nadu Waqf Board &middot; Arcot, Walajah &amp; Kalavai Taluks</div>
+    <h1>Ranipet Waqf Land Registry</h1>
+    <p class="dek">A searchable index of every Waqf institution and its recorded survey numbers for <b>Ranipet District</b> &mdash; transcribed from the Board's official furnished register so anyone can look up a Dargah, mosque or burial ground by name, village or survey number.</p>
+    <div class="stats" id="stats"></div>
+  </header>
+
+  <div class="filterbar">
+    <div class="searchrow">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="search" type="search" autocomplete="off" placeholder="Search by name, village or survey no&hellip;" aria-label="Search Waqf institutions">
+      <button class="clearbtn" id="searchClear" aria-label="Clear search">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <div class="controls">
+      <select id="villageSel" class="ctrl" aria-label="Filter by village"><option value="">All villages</option></select>
+      <select id="surveySel" class="ctrl" aria-label="Filter by survey type"><option value="">All survey types</option></select>
+      <div class="chipgroup" id="denomChips" role="group" aria-label="Filter by denomination"></div>
+      <select id="sortSel" class="ctrl" aria-label="Sort order">
+        <option value="sno">Sort: S.No</option>
+        <option value="name">Sort: Name (A&ndash;Z)</option>
+        <option value="extentDesc">Sort: Extent (largest)</option>
+        <option value="parcelsDesc">Sort: Most survey nos.</option>
+      </select>
+    </div>
+    <div class="resultline">
+      <span id="resultCount" aria-live="polite"></span>
+      <button id="resetBtn" type="button">Clear filters</button>
+    </div>
+  </div>
+
+  <main id="list"></main>
+
+  <footer>
+    <p><b>Source:</b> Tamil Nadu Waqf Board, No.1 Jaffar Syrang Street, Vallal Seethakathi Nagar, Chennai&ndash;600001 &mdash; &ldquo;Detail of Waqf Properties in the Arcot, Wallajah, Kalavai Taluk, Ranipet District,&rdquo; Rc.No.786/2022/B7/VLR, dated 12.08.2022, furnished under the Waqf Act 1995 to the Sub-Registrars of Arcot, Walajah and Kalavai.</p>
+    <p>This registry was digitised from scanned pages of the original document for the purpose of search and reference. A small number of entries were partly obscured by the office seal in the scan and are marked <span class="badge flag" style="cursor:default">flagged</span> &mdash; please verify those against the original register before relying on them for any legal, registration or transactional purpose. Extent totals shown are approximate sums of the individually recorded survey numbers.</p>
+    <p><b>Note (as printed in the register):</b> Apart from the properties listed above, any properties in a Sub-Registrar's jurisdiction which are Waqf by user/usage, which stand in the name of the above Waqf institutions, or which are registered as additional properties to the above Waqf institutions, or any properties mentioned in the revenue records as properties of the above Waqf institutions, shall also be treated as the Waqf properties of the above Waqf institutions.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var state = { q:"", village:"", survey:"", denom:"", sort:"sno", openSno:null };
+  var DATA = null;
+
+  function esc(s){
+    return String(s==null?"":s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c];
+    });
+  }
+
+  function highlight(text, q){
+    var safe = esc(text);
+    if(!q) return safe;
+    try{
+      var re = new RegExp("(" + q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&") + ")", "ig");
+      return safe.replace(re, "<mark>$1</mark>");
+    }catch(e){ return safe; }
+  }
+
+  function fmtAcres(n){
+    if(n == null) return "&mdash;";
+    if(n >= 100) return n.toFixed(1);
+    return n.toFixed(2);
+  }
+
+  function fmtCents(n){
+    if(n == null) return "&mdash;";
+    if(n >= 10) return n.toFixed(1);
+    return n.toFixed(2);
+  }
+
+  function extentSummary(inst){
+    if(inst.extentUnparsedCount === inst.parcelCount){
+      return { value: "&mdash;", label: "extent not recorded" };
+    }
+    var suffix = inst.extentUnparsedCount > 0 ? "+" : "";
+    var acres = inst.totalAcresKnown;
+    if(acres > 0 && acres < 1){
+      var cents = acres * 100;
+      return { value: fmtCents(cents) + suffix, label: "cents" + (suffix ? " (partly unrecorded)" : "") };
+    }
+    return { value: fmtAcres(acres) + suffix, label: "acres" + (suffix ? " (partly unrecorded)" : "") };
+  }
+
+  function institutionMatches(inst, q){
+    if(!q) return true;
+    var hay = (inst.name + " " + (inst.gsNo||"") + " " + inst.villages.join(" ")).toLowerCase();
+    if(hay.indexOf(q) !== -1) return true;
+    for(var i=0;i<inst.parcels.length;i++){
+      var p = inst.parcels[i];
+      if(p.surveyNo && p.surveyNo.toLowerCase().indexOf(q) !== -1) return true;
+    }
+    return false;
+  }
+
+  function getFiltered(){
+    var q = state.q.trim().toLowerCase();
+    var list = DATA.institutions.filter(function(inst){
+      if(!institutionMatches(inst, q)) return false;
+      if(state.village && inst.villages.indexOf(state.village) === -1) return false;
+      if(state.survey && !inst.parcels.some(function(p){ return p.oldNew === state.survey; })) return false;
+      if(state.denom === "__unspecified__"){ if(inst.denomination) return false; }
+      else if(state.denom){ if(inst.denomination !== state.denom) return false; }
+      return true;
+    });
+    list.sort(function(a,b){
+      switch(state.sort){
+        case "name": return a.name.localeCompare(b.name);
+        case "extentDesc": return b.totalAcresKnown - a.totalAcresKnown;
+        case "parcelsDesc": return b.parcelCount - a.parcelCount;
+        default: return a.sno - b.sno;
+      }
+    });
+    return list;
+  }
+
+  function parcelRow(p, q){
+    var flagged = !!p.note;
+    var villageHtml = highlight(p.village || "—", q);
+    var surveyHtml = p.surveyNo ? highlight(p.surveyNo, q) : "—";
+    var titleAttr = flagged ? ' title="' + esc(p.note) + '"' : (p.registerPage ? ' title="Register ' + esc(p.registerPage) + '"' : "");
+    return '<div class="prow' + (flagged ? ' flagged' : '') + '"' + titleAttr + '>' +
+      '<div class="pv">' + villageHtml + '<span class="sv">' + surveyHtml + '</span></div>' +
+      '<div class="ptype">' + esc(p.oldNew && p.oldNew !== "-" ? p.oldNew : "") + '</div>' +
+      '<div class="pext">' + esc(p.extent || "—") + '</div>' +
+    '</div>';
+  }
+
+  function cardHtml(inst, q){
+    var open = state.openSno === inst.sno;
+    var hasFlag = inst.parcels.some(function(p){ return p.note; });
+    var badges = '<span class="badge gs">' + esc(inst.gsNo || "GS —") + '</span>';
+    if(inst.denomination) badges += '<span class="badge denom">' + esc(inst.denomination) + '</span>';
+    if(hasFlag) badges += '<span class="badge flag" title="Some figures for this entry were partly obscured by the office seal in the scan — verify against the original register.">verify ⚠</span>';
+    var panel = '<div class="panel"><div class="parceltable">' +
+      inst.parcels.map(function(p){ return parcelRow(p, q); }).join("") +
+      '</div></div>';
+    return (
+      '<article class="card" data-open="' + open + '" data-sno="' + inst.sno + '">' +
+        '<button class="head" type="button" aria-expanded="' + open + '">' +
+          '<span class="sno">' + inst.sno + '</span>' +
+          '<span class="headmain">' +
+            '<div class="name">' + highlight(inst.name, q) + '</div>' +
+            '<div class="meta">' + badges + '</div>' +
+            '<div class="villages">' + esc(inst.villages.join(", ")) + '</div>' +
+          '</span>' +
+          '<span class="foot-stats"><span class="acres">' + extentSummary(inst).value + '</span><span class="parcels">' + extentSummary(inst).label + ' &middot; ' + inst.parcelCount + '&nbsp;survey&nbsp;no' + (inst.parcelCount===1?'.':'s.') + '</span></span>' +
+          '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>' +
+        '</button>' +
+        panel +
+      '</article>'
+    );
+  }
+
+  function render(){
+    var q = state.q.trim().toLowerCase();
+    var list = getFiltered();
+    var listEl = document.getElementById("list");
+    if(list.length === 0){
+      listEl.innerHTML = '<div class="empty"><div class="big">No matching entries</div>' +
+        'Try a different name, village or survey number.</div>';
+    } else {
+      listEl.innerHTML = list.map(function(inst){ return cardHtml(inst, q); }).join("");
+    }
+    var total = DATA.institutions.length;
+    var rc = document.getElementById("resultCount");
+    rc.textContent = list.length === total
+      ? total + " institutions on record"
+      : "Showing " + list.length + " of " + total + " institutions";
+
+    var filtersActive = !!(state.q || state.village || state.survey || state.denom);
+    document.getElementById("resetBtn").style.display = filtersActive ? "inline" : "none";
+  }
+
+  function toggleCard(sno){
+    state.openSno = (state.openSno === sno) ? null : sno;
+    render();
+  }
+
+  function buildStats(meta){
+    var items = [
+      [meta.institutionCount, "Institutions"],
+      [meta.parcelCount, "Survey Nos."],
+      [meta.villageCount, "Villages"],
+      [meta.totalKnownAcres.toLocaleString(undefined,{maximumFractionDigits:0}), "Acres (approx.)"]
+    ];
+    document.getElementById("stats").innerHTML = items.map(function(it){
+      return '<div class="stat"><span class="n">' + it[0] + '</span><span class="l">' + it[1] + '</span></div>';
+    }).join("");
+  }
+
+  function buildControls(meta){
+    var vSel = document.getElementById("villageSel");
+    meta.villages.forEach(function(v){
+      var o = document.createElement("option"); o.value = v; o.textContent = v; vSel.appendChild(o);
+    });
+    var sSel = document.getElementById("surveySel");
+    meta.surveyTypes.forEach(function(t){
+      var o = document.createElement("option"); o.value = t; o.textContent = t; sSel.appendChild(o);
+    });
+    var chipWrap = document.getElementById("denomChips");
+    var chips = [["", "All"]].concat(meta.denominations.map(function(d){ return [d,d]; })).concat([["__unspecified__","Unspecified"]]);
+    chipWrap.innerHTML = chips.map(function(c){
+      return '<button class="chip" type="button" data-denom="' + esc(c[0]) + '" aria-pressed="' + (c[0]==="") + '">' + esc(c[1]) + '</button>';
+    }).join("");
+    chipWrap.addEventListener("click", function(e){
+      var btn = e.target.closest(".chip");
+      if(!btn) return;
+      state.denom = btn.getAttribute("data-denom");
+      chipWrap.querySelectorAll(".chip").forEach(function(c){ c.setAttribute("aria-pressed", c===btn ? "true":"false"); });
+      render();
+    });
+  }
+
+  function wireEvents(){
+    var search = document.getElementById("search");
+    var clearBtn = document.getElementById("searchClear");
+    var deb;
+    search.addEventListener("input", function(){
+      clearBtn.style.display = search.value ? "flex" : "none";
+      clearTimeout(deb);
+      deb = setTimeout(function(){ state.q = search.value; render(); }, 120);
+    });
+    clearBtn.addEventListener("click", function(){
+      search.value=""; state.q=""; clearBtn.style.display="none"; render(); search.focus();
+    });
+
+    document.getElementById("villageSel").addEventListener("change", function(e){ state.village = e.target.value; render(); });
+    document.getElementById("surveySel").addEventListener("change", function(e){ state.survey = e.target.value; render(); });
+    document.getElementById("sortSel").addEventListener("change", function(e){ state.sort = e.target.value; render(); });
+
+    document.getElementById("resetBtn").addEventListener("click", function(){
+      state = { q:"", village:"", survey:"", denom:"", sort:"sno", openSno:null };
+      search.value=""; clearBtn.style.display="none";
+      document.getElementById("villageSel").value="";
+      document.getElementById("surveySel").value="";
+      document.getElementById("sortSel").value="sno";
+      document.querySelectorAll(".chip").forEach(function(c){ c.setAttribute("aria-pressed", c.getAttribute("data-denom")==="" ? "true":"false"); });
+      render();
+    });
+
+    document.getElementById("list").addEventListener("click", function(e){
+      var head = e.target.closest(".head");
+      if(!head) return;
+      var card = head.closest(".card");
+      toggleCard(Number(card.getAttribute("data-sno")));
+    });
+  }
+
+  function boot(data){
+    DATA = data;
+    buildStats(DATA.meta);
+    buildControls(DATA.meta);
+    wireEvents();
+    render();
+  }
+
+  fetch("data.json").then(function(r){ return r.json(); }).then(boot).catch(function(err){
+    document.getElementById("list").innerHTML = '<div class="empty"><div class="big">Could not load the registry data</div>' + esc(err && err.message) + '</div>';
+  });
+})();
+</script>
