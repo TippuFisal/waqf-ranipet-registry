@@ -1,3 +1,4 @@
+<meta charset="UTF-8">
 <title>Ranipet Waqf Registry</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -180,6 +181,15 @@
     display:flex; flex-wrap:wrap; gap:8px;
     align-items:center;
   }
+  .quickrow{ display:none; }
+  .filters-toggle{ display:inline-flex; align-items:center; gap:6px; }
+  .filter-count{
+    display:inline-flex; align-items:center; justify-content:center;
+    min-width:16px; height:16px; padding:0 4px;
+    border-radius:999px; background:var(--accent); color:#fff;
+    font-size:10px; font-weight:700; line-height:1;
+  }
+  .filter-count[hidden]{ display:none; }
   .ctrl{
     font: inherit;
     font-size:13.5px;
@@ -331,6 +341,22 @@
     .foot-stats{ min-width:0; }
     .foot-stats .acres{ font-size:15px; }
   }
+
+  @media (max-width:639px){
+    .dek{
+      display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+      overflow:hidden;
+    }
+    .stats{ padding-block: 2px 2px; }
+    .quickrow{ display:flex; }
+    .controls{ display:none; }
+    .controls.open{
+      display:flex; flex-direction:column; align-items:stretch;
+      padding-top:2px;
+    }
+    .controls.open select.ctrl,
+    .controls.open .chipgroup{ width:100%; }
+  }
 </style>
 
 <div class="wrap">
@@ -349,7 +375,14 @@
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
       </button>
     </div>
-    <div class="controls">
+    <div class="quickrow">
+      <button class="ctrl filters-toggle" id="filtersToggle" type="button" aria-expanded="false" aria-controls="moreFilters">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+        Filters
+        <span class="filter-count" id="filterCount" hidden>0</span>
+      </button>
+    </div>
+    <div class="controls" id="moreFilters">
       <select id="villageSel" class="ctrl" aria-label="Filter by village"><option value="">All villages</option></select>
       <select id="surveySel" class="ctrl" aria-label="Filter by survey type"><option value="">All survey types</option></select>
       <div class="chipgroup" id="denomChips" role="group" aria-label="Filter by denomination"></div>
@@ -510,6 +543,15 @@
 
     var filtersActive = !!(state.q || state.village || state.survey || state.denom);
     document.getElementById("resetBtn").style.display = filtersActive ? "inline" : "none";
+
+    var panelFilterCount = (state.village ? 1 : 0) + (state.survey ? 1 : 0) + (state.denom ? 1 : 0) + (state.sort !== "sno" ? 1 : 0);
+    var badge = document.getElementById("filterCount");
+    if(panelFilterCount > 0){
+      badge.textContent = panelFilterCount;
+      badge.hidden = false;
+    } else {
+      badge.hidden = true;
+    }
   }
 
   function toggleCard(sno){
@@ -563,6 +605,13 @@
     });
     clearBtn.addEventListener("click", function(){
       search.value=""; state.q=""; clearBtn.style.display="none"; render(); search.focus();
+    });
+
+    var filtersToggle = document.getElementById("filtersToggle");
+    var moreFilters = document.getElementById("moreFilters");
+    filtersToggle.addEventListener("click", function(){
+      var isOpen = moreFilters.classList.toggle("open");
+      filtersToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
     });
 
     document.getElementById("villageSel").addEventListener("change", function(e){ state.village = e.target.value; render(); });
