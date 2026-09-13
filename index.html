@@ -354,9 +354,12 @@
     .controls.open{
       display:flex; flex-direction:column; align-items:stretch;
       padding-top:2px;
+      max-height:min(60vh, 420px); overflow-y:auto; -webkit-overflow-scrolling:touch;
     }
     .controls.open select.ctrl,
     .controls.open .chipgroup{ width:100%; }
+    /* Don't let an open filter panel pin itself to the top of the screen while scrolling */
+    .filterbar:has(.controls.open){ position:static; }
   }
 </style>
 
